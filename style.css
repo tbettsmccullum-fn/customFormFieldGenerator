@@ -1,0 +1,86 @@
+* {
+  box-sizing: border-box;
+}
+body, .form-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+}
+/*Left container*/
+.left {
+    width: 75%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+}
+.left > section {
+    border: 1px solid #cccccc;
+    width: 100%;
+    min-height: 925px;
+}
+#clear-all{
+    padding: 3px 40px;
+    cursor: pointer;
+}
+.tabs {
+    display: flex;
+    justify-content: flex-end;
+}
+.tabs > button {
+    border: 1px solid #cccccc;
+    background-color: #ffffff;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+    width:  11rem;
+    height: 2.5rem;
+    padding: 0 0.5rem;
+    font-size: 0.875rem;
+    cursor: pointer;
+}
+.tabs > button.active, 
+.tabs > button:hover {
+    background-color: #cccccc;
+}
+.content {
+    display: none;
+    position: relative;
+}
+.content.visible {
+    display: block;
+}
+.copy{
+    width: 100%;
+    min-height: 925px;
+    cursor: copy;
+}
+.copy.focus{
+    background-color: aliceblue;
+}
+pre {
+    margin: 0;
+    pointer-events: none;
+    white-space: pre-wrap;
+}
+div[class^='custom_field']{
+    display: flex;
+    align-items: center;
+}
+div[class^='custom_field'] button{
+    cursor: pointer;
+    margin-right: 0.438rem;
+    height: 1.563rem;
+}
+/*Right container*/
+.right {
+    padding: 0 0.5rem;
+    width: 25%;
+}
+.input-wrapper form {
+    width: 100%;
+}
+.input-wrapper form fieldset{
+    display: flex;
+    flex-direction: column;
+}
+

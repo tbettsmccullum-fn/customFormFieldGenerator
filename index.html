@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Custom Form Field Generator</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <section class="left">
+        <div class="clear-all-wrapper">
+            <button id="clear-all">Clear All</button>
+        </div>
+        <div class="tabs">
+          <button id="form-button" class="tab active" onclick="clickTab(event, '#form-wrapper')">Form</button>
+          <button id="html-button" class="tab" onclick="clickTab(event, '#html-wrapper')">HTML</button>
+          <button id="submit-button" class="tab" onclick="clickTab(event, '#submit-wrapper')">Submit File</button>
+        </div>
+        <section id="form-wrapper" class="content visible">
+            <div id="form"></div>
+        </section>
+        <section id="html-wrapper" class="content">
+            <div id="html-output" class="copy"></div>
+        </section>
+        <section id="submit-wrapper" class="content">
+            <div id="submit-output" class="copy"></div>
+        </section>
+    </section>
+    <section class="right">
+        <div class="input-wrapper">
+        <form id="input">
+            <fieldset>
+                <legend><strong>Input</strong></legend>
+                <div>
+                    <input id="input-required" name="input-required" type="checkbox" checked="checked" />
+                    <label for="input-required">Required</label>
+                </div>
+                <label id="input-length-label" for="input-length">Max Length: <abbr class="req" title="required">*</abbr></label>
+                <input id="input-length" name="input-length" type="text" size="20" value="190" required="required"/>
+                <label for="input-type">Type: </label>
+                <select id="input-type" name="input-type" required="required">
+                    <option value="text">Text</option>
+                    <option value="date">Date</option>
+                    <option value="number">Number</option>
+                    <option value="tel">Tel</option>
+                    <option value="email">Email</option>
+                </select>
+                <label for="input-title">Label: <abbr class="req" title="required">*</abbr></label>
+                <input id="input-title" name="input-title" type="text" size="20" required="required"/>
+                <label for="input-name">Name/ID: <abbr class="req" title="required">*</abbr></label>
+                <input id="input-name" name="input-name" type="text" size="20" required="required"/>
+                <input type="submit" value="Create" />
+            </fieldset>
+        </form>
+        <form id="textarea">
+            <fieldset>
+                <legend><strong>Text Area</strong></legend>
+                <div>
+                    <input id="textarea-required" name="textarea-required" type="checkbox" checked="checked"/>
+                    <label for="textarea-required">Required </label>
+                </div>
+                <label for="textarea-title">Label: <abbr class="req" title="required">*</abbr></label>
+                <input id="textarea-title" name="textarea-title" type="text" size="20" required="required"/>
+                <label for="textarea-name">Name/ID: <abbr class="req" title="required">*</abbr></label>
+                <input id="textarea-name" name="textarea-name" type="text" size="20" required="required"/>
+                <input type="submit" value="Create" />
+            </fieldset>
+        </form>  
+        <form id="select">
+            <fieldset>
+                <legend><strong>Empty Select</strong></legend>
+                <div>
+                    <input id="select-required" name="radio-required" type="checkbox" checked="checked"/>
+                    <label for="select-required">Required </label>
+                </div>
+                <label for="select-title">Label: <abbr class="req" title="required">*</abbr></label>
+                <input id="select-title" name="select-title" type="text" size="20" required="required"/>
+                <label for="select-name">Name/ID: <abbr class="req" title="required">*</abbr></label>
+                <input id="select-name" name="select-name" type="text" size="20" required="required"/>
+                <label for="select-num"># of Options: <abbr class="req" title="required">*</abbr></label>
+                <input id="select-num" name="select-num" type="number" required="required"/>
+                <input type="submit" value="Create" />
+            </fieldset>
+        </form>
+        <form id="radio">
+            <fieldset>
+                <legend><strong>Empty Radio Buttons</strong></legend>
+                <div>
+                <input id="radio-required" name="radio-required" type="checkbox" checked="checked"/>
+                <label for="radio-required">Required </label>
+                </div>
+                <label for="radio-title">Label: <abbr class="req" title="required">*</abbr></label>
+                <input id="radio-title" name="radio-title" type="text" size="20" required="required"/>
+                <label for="radio-name">Name/ID Prefix: <abbr class="req" title="required">*</abbr></label>
+                <input id="radio-name" name="radio-name" type="text" size="20" required="required"/>
+                <label for="radio-num"># of Buttons: <abbr class="req" title="required">*</abbr></label>
+                <input id="radio-num" name="radio-num" type="number" required="required"/>
+                <input type="submit" value="Create" />
+            </fieldset>
+        </form>
+        <form id="checkbox">
+            <fieldset>
+                <legend><strong>Empty Checkboxes</strong></legend>
+                <div>
+                <input id="checkbox-required" name="checkbox-required" type="checkbox" checked="checked"/>
+                <label for="checkbox-required">Required </label>
+                </div>
+                <label for="checkbox-title">Label: <abbr class="req" title="required">*</abbr></label>
+                <input id="checkbox-title" name="checkbox-title" type="text" size="20" required="required"/>
+                <label for="checkbox-name">Name/ID Prefix: <abbr class="req" title="required">*</abbr></label>
+                <input id="checkbox-name" name="checkbox-name" type="text" size="20" required="required"/>
+                <label for="checkbox-num"># of Checkboxes: <abbr class="req" title="required">*</abbr></label>
+                <input id="checkbox-num" name="checkbox-num" type="number" required="required"/>
+                <input type="submit" value="Create" />
+            </fieldset>
+        </form>
+       
+        </div>
+    </section>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="jquery.min.js"><\/script>')</script>
+    <script src="script.js"></script>
+  </body>
+</html>
