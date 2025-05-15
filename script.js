@@ -2,6 +2,7 @@
 let formOutput; // Form output container
 let htmlOutput; // HTML output container
 let submitOutput; // Submit file output container
+let inboundOutput; // Submit inbound output container
 let inputLength;
 let inputLabel;
 let copyElements;
@@ -15,6 +16,7 @@ $( document ).ready(function() {
     formOutput = $("#form"); // Form output container
     htmlOutput = $("#html-output"); // HTML output container
     submitOutput = $("#submit-output"); // Submit file output container
+    inboundOutput = $("#inbound-output"); // Inbound file output container
     inputLength =  $("#input-length");
     inputLabel = $("#input-length-label");
     copyElements = $("#copy");
@@ -29,6 +31,7 @@ $( document ).ready(function() {
         let name = e.target[5].value.trim();
         createInput(required,maxlength,type,title,name);
         createOneLineSubmit(title,name);
+        createOneLineInbound(title,name);
         numFields += 1;
         e.target.reset();
         inputLength.show();
@@ -41,7 +44,8 @@ $( document ).ready(function() {
         let title = e.target[2].value.trim(); 
         let name = e.target[3].value.trim();
         createTextArea(required,title,name);
-        createTwoLineSubmit(title,name); 
+        createTwoLineSubmit(title,name);
+        createOneLineInbound(title,name); 
         numFields += 1;
         e.target.reset();
     });
@@ -53,7 +57,8 @@ $( document ).ready(function() {
         let name = e.target[3].value.trim();
         let numOptions = e.target[4].value;
         createSelect(required,title,name,numOptions);
-        createOneLineSubmit(title,name); 
+        createOneLineSubmit(title,name);
+        createOneLineInbound(title,name); 
         numFields += 1;
         e.target.reset();
     });
@@ -65,7 +70,8 @@ $( document ).ready(function() {
         let name = e.target[3].value.trim(); 
         let numOptions = e.target[4].value;
         createRadioButtons(required,title,name,numOptions);
-        createOneLineSubmit(title,name); 
+        createOneLineSubmit(title,name);
+        createOneLineInbound(title,name); 
         numFields += 1;
         e.target.reset();
     });
@@ -79,6 +85,7 @@ $( document ).ready(function() {
         createCheckboxes(required,title,name,numOptions);
         for (let i = 0; i < numOptions; i++) { 
             createOneLineSubmit("X",name + "_" + i);
+            createOneLineInbound("X",name + "_" + i);
         }
         numFields += 1;
         e.target.reset();
@@ -107,6 +114,7 @@ $( document ).ready(function() {
         formOutput.empty();
         htmlOutput.text('');
         submitOutput.text('');
+        inboundOutput.text('');
     });
   
 });
@@ -446,4 +454,22 @@ function createCheckboxes(required,title,name,numOptions){
     // append end of div to html, append complete html block
     htmlBlock += div_end + newline;
     htmlOutput.append(createFieldHTML(htmlBlock));
+}
+
+
+// Return a Single Line Inbound File line
+function createOneLineInbound(title, name){
+    let inboundBodyContent = 'inbound.Body = @"\n';
+    let preBlock = document.createElement("pre")
+    preBlock.setAttribute("class", 'custom_field_'+numFields);
+
+    let codeBlock = document.createElement("code")
+    if(numFields === 0){
+        codeBlock.append(inboundBodyContent)
+    }
+    codeBlock.append(`${title}: " + Request.Form["${name}"] + @"`);
+    codeBlock.append('\r\n'); 
+
+    preBlock.append(codeBlock);
+    inboundOutput.append(preBlock);
 }
