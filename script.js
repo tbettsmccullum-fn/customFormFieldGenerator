@@ -61,6 +61,7 @@ $( document ).ready(function() {
         createOneLineInbound(title,name); 
         numFields += 1;
         e.target.reset();
+        removeOptionFields("select");
     });
 
     $("#radio").submit((e) => {
@@ -74,6 +75,7 @@ $( document ).ready(function() {
         createOneLineInbound(title,name); 
         numFields += 1;
         e.target.reset();
+        removeOptionFields("radio");
     });
 
     $("#checkbox").submit((e) => {
@@ -89,6 +91,7 @@ $( document ).ready(function() {
         }
         numFields += 1;
         e.target.reset();
+        removeOptionFields("checkbox");
     });
 
     $("#input-type").change((e) => {
@@ -505,6 +508,10 @@ inputFields.forEach(function(inputField) {
         let inputType = event.target.id;
         console.log(`Number of ${inputType} options selected: ${numOfOptionFields}`);
         let formID = inputType.replace('-num', '');
+        // Remove option fields if # of option input is empty
+        if (!numOfOptionFields){
+            removeOptionFields(formID);
+        }
         for (let i = 0; i < numOfOptionFields; i++) { 
             addOptionFields(formID)
         }
@@ -528,6 +535,7 @@ function addOptionFields(fieldId){
     fields.insertBefore(input,submitForm);
 }
 
+// Grab the option labels and values 
 function collectOptions(inputField){
     let form = document.getElementById(inputField);
     let fields = form.lastElementChild;
@@ -538,4 +546,16 @@ function collectOptions(inputField){
     });
     console.log(values);
     return values;
+}
+
+// Get rid of old option fields
+function removeOptionFields(fieldId) {
+    let form = document.getElementById(fieldId);
+    let fields = form.lastElementChild;
+    //console.log(fields);
+    let optionFields = fields.querySelectorAll("input.optionsInputField, label.optionsInputField");
+    //console.log(optionFields);
+    optionFields.forEach(field => {
+         field.remove();
+    })
 }
