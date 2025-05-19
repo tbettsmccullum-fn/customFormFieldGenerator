@@ -61,6 +61,7 @@ $( document ).ready(function() {
         createOneLineInbound(title,name); 
         numFields += 1;
         e.target.reset();
+        removeOptionFields("select");
     });
 
     $("#radio").submit((e) => {
@@ -74,6 +75,7 @@ $( document ).ready(function() {
         createOneLineInbound(title,name); 
         numFields += 1;
         e.target.reset();
+        removeOptionFields("radio");
     });
 
     $("#checkbox").submit((e) => {
@@ -89,6 +91,7 @@ $( document ).ready(function() {
         }
         numFields += 1;
         e.target.reset();
+        removeOptionFields("checkbox");
     });
 
     $("#input-type").change((e) => {
@@ -313,12 +316,19 @@ function createSelect(required,title,name,numOptions){
     // append first option to html
     htmlBlock += option1.outerHTML+ newline; 
 
+    let values = collectOptions("select");
+
     // create the rest of the options 
     for (let i = 0; i < numOptions; i++) { 
         let option = document.createElement("option"); // create option 
-        option.append("X");
-        option.setAttribute("value", "X");
-
+        // add in option values, if there's no option value entered then add the X placeholder
+        if(values[i]){
+            option.append(values[i]);
+            option.setAttribute("value", values[i]);
+        } else {
+            option.setAttribute("value", "X");
+            option.append("X");
+        }
         select.append(option); // append each option the the select
 
         htmlBlock += option.outerHTML+ newline; // append each option to html
@@ -357,24 +367,30 @@ function createRadioButtons(required,title,name,numOptions){
     // append div and label to html
     let htmlBlock = div_beg + newline + label.outerHTML + newline;
 
+    let values = collectOptions("radio");
     // create radio buttons 
     for (let i = 0; i < numOptions; i++) { 
+        let optionLabel = document.createElement("label"); // create radio button label
+        optionLabel.classList.add("inlinelabel");
+        optionLabel.setAttribute("for", name + "_" + i); 
         let optionInput = document.createElement("input"); // create radio button input 
         optionInput.setAttribute("id", name + "_" + i); 
         optionInput.setAttribute("name", name);
         optionInput.setAttribute("type", "radio");
-        optionInput.setAttribute("value", "X");
+        if(values[i]){
+            optionInput.setAttribute("value", values[i]);
+            optionInput.append(values[i]);
+            optionLabel.append(values[i]);
+        } else {
+            optionInput.setAttribute("value", "X");
+            optionInput.append("X");
+            optionLabel.append("X");
+        }
 
         // if required and if this is the first option
         if (required && i == 0) {
             optionInput.setAttribute("required", "required"); // set that option to be required 
         }
-
-        // create radio button label
-        let optionLabel = document.createElement("label"); 
-        optionLabel.classList.add("inlinelabel");
-        optionLabel.setAttribute("for", name + "_" + i); 
-        optionLabel.append("X");
 
         // append option and label to form
         div.append(optionInput); 
@@ -423,18 +439,28 @@ function createCheckboxes(required,title,name,numOptions){
     // append to html
     let htmlBlock = div_beg + newline + label.outerHTML + newline;
 
+    let values = collectOptions("checkbox");
+
     // create checkboxes
     for (let i = 0; i < numOptions; i++) { 
-
         let input = document.createElement("input"); //create checkbox
         input.setAttribute("id", name + "_" + i);
         input.setAttribute("name", name + "_" + i);
-        input.setAttribute("value", "X");
-        input.setAttribute("type", "checkbox");
-
         let label = document.createElement("label");  // create checkbox label
         label.classList.add("inlinelabel");
-        label.append("X");
+        if(values[i]){
+            input.setAttribute("value", values[i]);
+            input.append(values[i]);
+            label.append(values[i]);
+        }else {
+            input.setAttribute("value", "X");
+            input.append("X");
+            label.append("X");
+        }
+        //input.setAttribute("value", "X");
+        input.setAttribute("type", "checkbox");
+
+  
         label.setAttribute("for", name + "_" + i);
 
         let linebreak = document.createElement("br"); // create break element
@@ -472,4 +498,91 @@ function createOneLineInbound(title, name){
 
     preBlock.append(codeBlock);
     inboundOutput.append(preBlock);
+}
+
+// Listens for changes in input fields and adjusts option fields accordingly
+var inputFields = document.querySelectorAll("#select-num, #radio-num, #checkbox-num");
+inputFields.forEach(function(inputField) {
+    inputField.addEventListener("input", function(event) {
+        let numOfOptionFields = event.target.value;
+        let inputType = event.target.id;
+        //console.log(`Number of ${inputType} options selected: ${numOfOptionFields}`);
+        let formID = inputType.replace('-num', '');
+        //Remove option fields if # of option input is empty
+        if (!numOfOptionFields){
+            removeOptionFields(formID);
+        }
+        // Add option fields 
+        for (let i = 0; i < numOfOptionFields; i++) { 
+            addOptionFields(formID)
+        }
+        // Getting a count of current option fields
+        let form = document.getElementById(formID);
+        let fields = form.lastElementChild;
+        let optionFields = fields.querySelectorAll("#myInput"); 
+        //console.log("optionFieldLength: ",optionFields.length, "number of options selected: ", numOfOptionFields, "diff: ", numOfOptionFields-optionFields.length)
+        let diff = (numOfOptionFields-optionFields.length);
+
+        // Remove excess option fields
+         if (diff < 0) {
+            for (let i = 0; i < Math.abs(diff); i++) {
+                      oneOptionField(formID);
+            }
+        }
+    });
+});
+
+// Add option fields for select, radio, and checkboxes
+function addOptionFields(fieldId){
+    let label = document.createElement("label");
+    label.textContent = "Option Value:";
+    label.setAttribute("class", "optionsInputField");
+    let form = document.getElementById(fieldId);
+    let input = document.createElement("input");
+    let fields = form.lastElementChild;
+    let submitForm = fields.lastElementChild;
+    input.setAttribute("type", "text"); 
+    input.setAttribute("id", "myInput");
+    input.setAttribute("name", "myInputName");
+    input.setAttribute("class", "optionsInputField");
+    fields.insertBefore(label,submitForm);
+    fields.insertBefore(input,submitForm);
+}
+
+// Grab the option labels and values 
+function collectOptions(inputField){
+    let form = document.getElementById(inputField);
+    let fields = form.lastElementChild;
+    let options = fields.querySelectorAll("#myInput");
+    let values = [];
+    options.forEach(option => {
+        values.push(option.value); 
+    });
+    //console.log(values);
+    return values;
+}
+
+// Get rid of old option fields
+function removeOptionFields(fieldId) {
+    let form = document.getElementById(fieldId);
+    let fields = form.lastElementChild;
+    //console.log(fields);
+    let optionFields = fields.querySelectorAll("input.optionsInputField, label.optionsInputField");
+    //console.log(optionFields);
+    optionFields.forEach(field => {
+         field.remove();
+    })
+}
+
+// Get rid of one option field
+function oneOptionField(fieldId) {
+    let form = document.getElementById(fieldId);
+    let fields = form.lastElementChild;
+    //console.log(fields);
+    let optionLabel = fields.querySelector("label.optionsInputField");
+    let optionInput = fields.querySelector("input.optionsInputField");
+    console.log(optionLabel);
+    console.log(optionInput);
+    optionLabel.remove();
+    optionInput.remove()
 }
