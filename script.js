@@ -326,6 +326,7 @@ function createSelect(required,title,name,numOptions){
             option.append(values[i]);
             option.setAttribute("value", values[i]);
         } else {
+            option.setAttribute("value", "X");
             option.append("X");
         }
         select.append(option); // append each option the the select
@@ -378,10 +379,10 @@ function createRadioButtons(required,title,name,numOptions){
         optionInput.setAttribute("type", "radio");
         if(values[i]){
             optionInput.setAttribute("value", values[i]);
-            optionLabel.setAttribute("label", values[i]);
             optionInput.append(values[i]);
             optionLabel.append(values[i]);
         } else {
+            optionInput.setAttribute("value", "X");
             optionInput.append("X");
             optionLabel.append("X");
         }
@@ -450,11 +451,9 @@ function createCheckboxes(required,title,name,numOptions){
         if(values[i]){
             input.setAttribute("value", values[i]);
             input.append(values[i]);
-            label.setAttribute("label", values[i]);
             label.append(values[i]);
         }else {
             input.setAttribute("value", "X");
-            input.setAttribute("label", "X");
             input.append("X");
             label.append("X");
         }
