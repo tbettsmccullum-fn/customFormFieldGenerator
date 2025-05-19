@@ -501,24 +501,39 @@ function createOneLineInbound(title, name){
     inboundOutput.append(preBlock);
 }
 
+// Listens for changes in input fields and adjusts option fields accordingly
 var inputFields = document.querySelectorAll("#select-num, #radio-num, #checkbox-num");
 inputFields.forEach(function(inputField) {
     inputField.addEventListener("input", function(event) {
         let numOfOptionFields = event.target.value;
         let inputType = event.target.id;
-        console.log(`Number of ${inputType} options selected: ${numOfOptionFields}`);
+        //console.log(`Number of ${inputType} options selected: ${numOfOptionFields}`);
         let formID = inputType.replace('-num', '');
-        // Remove option fields if # of option input is empty
+        //Remove option fields if # of option input is empty
         if (!numOfOptionFields){
             removeOptionFields(formID);
         }
+        // Add option fields 
         for (let i = 0; i < numOfOptionFields; i++) { 
             addOptionFields(formID)
+        }
+        // Getting a count of current option fields
+        let form = document.getElementById(formID);
+        let fields = form.lastElementChild;
+        let optionFields = fields.querySelectorAll("#myInput"); 
+        //console.log("optionFieldLength: ",optionFields.length, "number of options selected: ", numOfOptionFields, "diff: ", numOfOptionFields-optionFields.length)
+        let diff = (numOfOptionFields-optionFields.length);
+
+        // Remove excess option fields
+         if (diff < 0) {
+            for (let i = 0; i < Math.abs(diff); i++) {
+                      oneOptionField(formID);
+            }
         }
     });
 });
 
-// Add option fields for selection, radio, and checkboxs
+// Add option fields for select, radio, and checkboxes
 function addOptionFields(fieldId){
     let label = document.createElement("label");
     label.textContent = "Option Value:";
@@ -544,7 +559,7 @@ function collectOptions(inputField){
     options.forEach(option => {
         values.push(option.value); 
     });
-    console.log(values);
+    //console.log(values);
     return values;
 }
 
@@ -558,4 +573,17 @@ function removeOptionFields(fieldId) {
     optionFields.forEach(field => {
          field.remove();
     })
+}
+
+// Get rid of one option field
+function oneOptionField(fieldId) {
+    let form = document.getElementById(fieldId);
+    let fields = form.lastElementChild;
+    //console.log(fields);
+    let optionLabel = fields.querySelector("label.optionsInputField");
+    let optionInput = fields.querySelector("input.optionsInputField");
+    console.log(optionLabel);
+    console.log(optionInput);
+    optionLabel.remove();
+    optionInput.remove()
 }
